@@ -13,6 +13,7 @@ export interface Loggable {
 
 export type LogPlainRecord = {
   id: string;
-  time: number;
+  time: string;
   message: string;
+  extraData?
 }

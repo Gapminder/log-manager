@@ -41,8 +41,7 @@ describe('logging', () => {
     firstLogger.log('notice 1', LogLevel.ALL);
     secondLogger.log('notice 2', LogLevel.ALL);
 
-    const result = storageLogger.getContent();
-    const briefResult = result.map(record => {
+    const result = storageLogger.getContent().map(record => {
       delete record.time;
 
       return record;
@@ -52,7 +51,7 @@ describe('logging', () => {
       { message: 'notice 2', id: '@second' }
     ];
 
-    expect(briefResult).to.deep.equal(expectedResult);
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('with 3 loggers', () => {
@@ -71,8 +70,7 @@ describe('logging', () => {
     secondLogger.log('notice 2', LogLevel.ALL);
     thirdLogger.log('notice 3', LogLevel.ALL);
 
-    const result = storageLogger.getContent();
-    const briefResult = result.map(record => {
+    const result = storageLogger.getContent().map(record => {
       delete record.time;
 
       return record;
@@ -83,7 +81,7 @@ describe('logging', () => {
       { message: 'notice 3', id: '@third' }
     ];
 
-    expect(briefResult).to.deep.equal(expectedResult);
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('log list should be EMPTY if log levels DOES NOT matched', () => {
@@ -145,8 +143,7 @@ describe('logging', () => {
     thirdLogger.log('notice 3', LogLevel.DEBUG);
 
 
-    const result = storageLogger.getContent();
-    const briefResult = result.map(record => {
+    const result = storageLogger.getContent().map(record => {
       delete record.time;
 
       return record;
@@ -157,7 +154,7 @@ describe('logging', () => {
       { message: 'notice 3', id: '@third' }
     ];
 
-    expect(briefResult).to.deep.equal(expectedResult);
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('log list should be proper if log levels are matched by the MASK', () => {
@@ -176,8 +173,7 @@ describe('logging', () => {
     secondLogger.log('notice 2', LogLevel.DEBUG);
     thirdLogger.log('notice 3', LogLevel.REPLICATION);
 
-    const result = storageLogger.getContent();
-    const briefResult = result.map(record => {
+    const result = storageLogger.getContent().map(record => {
       delete record.time;
 
       return record;
@@ -187,7 +183,7 @@ describe('logging', () => {
       { message: 'notice 3', id: '@third' }
     ];
 
-    expect(briefResult).to.deep.equal(expectedResult);
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('log list should be proper if log levels are matched by the MASK case #2', () => {
@@ -206,8 +202,7 @@ describe('logging', () => {
     secondLogger.log('notice 2', LogLevel.DEBUG);
     thirdLogger.log('notice 3', LogLevel.REPLICATION);
 
-    const result = storageLogger.getContent();
-    const briefResult = result.map(record => {
+    const result = storageLogger.getContent().map(record => {
       delete record.time;
 
       return record;
@@ -218,7 +213,7 @@ describe('logging', () => {
       { message: 'notice 3', id: '@third' }
     ];
 
-    expect(briefResult).to.deep.equal(expectedResult);
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('log list should be proper if log levels are matched by the MASK with namy messages per the logger', () => {
@@ -243,8 +238,7 @@ describe('logging', () => {
     thirdLogger.log('notice 33', LogLevel.REPLICATION);
     thirdLogger.log('notice 333', LogLevel.REPLICATION);
 
-    const result = storageLogger.getContent();
-    const briefResult = result.map(record => {
+    const result = storageLogger.getContent().map(record => {
       delete record.time;
 
       return record;
@@ -261,7 +255,7 @@ describe('logging', () => {
       { message: 'notice 333', id: '@third' }
     ];
 
-    expect(briefResult).to.deep.equal(expectedResult);
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('with output to array and console', () => {
@@ -279,8 +273,7 @@ describe('logging', () => {
     firstLogger.log('notice 1', LogLevel.ALL);
     secondLogger.log('notice 2', LogLevel.ALL);
 
-    const result = storageLogger.getContent();
-    const briefResult = result.map(record => {
+    const result = storageLogger.getContent().map(record => {
       delete record.time;
 
       return record;
@@ -290,7 +283,33 @@ describe('logging', () => {
       { message: 'notice 2', id: '@second' }
     ];
 
-    expect(briefResult).to.deep.equal(expectedResult);
+    expect(result).to.deep.equal(expectedResult);
     sinon.assert.calledTwice(logStub);
+  });
+
+  it('additional data should be processed properly', () => {
+    const firstLogger = new LogManager('@first', LogLevel.ALL);
+    const secondLogger = new LogManager('@second', LogLevel.ALL);
+
+    firstLogger.addOutputTo(secondLogger);
+
+    const storageLogger = new StorageLogger();
+
+    secondLogger.addOutputTo(storageLogger);
+
+    firstLogger.log('notice 1', LogLevel.ALL, 'addition for notice 1');
+    secondLogger.log('notice 2', LogLevel.ALL, 'addition for notice 2');
+
+    const result = storageLogger.getContent().map(record => {
+      delete record.time;
+
+      return record;
+    });
+    const expectedResult = [
+      { message: 'notice 1', id: '@first', extraData: 'addition for notice 1' },
+      { message: 'notice 2', id: '@second', extraData: 'addition for notice 2' }
+    ];
+
+    expect(result).to.deep.equal(expectedResult);
   });
 });

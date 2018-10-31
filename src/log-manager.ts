@@ -11,7 +11,7 @@ export class LogManager implements Loggable {
     this.children.push(child);
   }
 
-  log(message: LogRecord | string, requestedLevel: LogLevel = LogLevel.ERROR) {
+  log(message: LogRecord | string, requestedLevel: LogLevel = LogLevel.ERROR, extraData?) {
     if (message instanceof LogRecord) {
       this.children.map(listener => listener.log(message));
     } else if (typeof message === 'string') {
@@ -19,13 +19,13 @@ export class LogManager implements Loggable {
         return;
       }
 
-      this.children.map(listener => listener.log(this.prepareLogRecord(message)));
+      this.children.map(listener => listener.log(this.prepareLogRecord(message, extraData)));
     } else {
       throw Error('wrong log argument type');
     }
   }
 
-  private prepareLogRecord(message: string): LogRecord {
-    return new LogRecord(this.id, message);
+  private prepareLogRecord(message: string, extraData?): LogRecord {
+    return new LogRecord(this.id, message, extraData);
   }
 }
