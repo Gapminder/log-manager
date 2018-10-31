@@ -26,7 +26,6 @@ describe('logging', () => {
     secondLogger.log('notice 2', LogLevel.ALL);
 
     sinon.assert.calledTwice(logStub);
-
   });
 
   it('with output to array', () => {
@@ -263,5 +262,35 @@ describe('logging', () => {
     ];
 
     expect(briefResult).to.deep.equal(expectedResult);
+  });
+
+  it('with output to array and console', () => {
+    const logStub = sandbox.stub(console, 'log');
+    const firstLogger = new LogManager('@first', LogLevel.ALL);
+    const secondLogger = new LogManager('@second', LogLevel.ALL);
+
+    firstLogger.addOutputTo(secondLogger);
+
+    const storageLogger = new StorageLogger();
+
+    secondLogger.addOutputTo(storageLogger);
+    secondLogger.addOutputTo(console);
+
+    firstLogger.log('notice 1', LogLevel.ALL);
+    secondLogger.log('notice 2', LogLevel.ALL);
+
+    const result = storageLogger.getContent();
+    const briefResult = result.map(record => {
+      delete record.time;
+
+      return record;
+    });
+    const expectedResult = [
+      { message: 'notice 1', id: '@first' },
+      { message: 'notice 2', id: '@second' }
+    ];
+
+    expect(briefResult).to.deep.equal(expectedResult);
+    sinon.assert.calledTwice(logStub);
   });
 });
