@@ -4,7 +4,7 @@ import { LogRecord } from './log-record';
 export class LogManager implements Loggable {
   private children: Loggable[] = [];
 
-  constructor(private id: string, private currentLevel: LogLevel) {
+  constructor(public readonly id: string, public readonly currentLevel: LogLevel) {
   }
 
   addOutputTo(child: Loggable) {
