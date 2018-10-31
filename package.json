@@ -1,5 +1,5 @@
 {
-  "name": "log-manager",
+  "name": "gapminder-log-manager",
   "version": "0.1.0",
   "description": "Log manager with 3 levels of logging and the possibility to combine different log managers or loggers",
   "author": "Vyacheslav Chub<vyacheslav.chub@gmail.com>",
