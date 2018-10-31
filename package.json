@@ -1,7 +1,7 @@
 {
   "name": "log-manager",
   "version": "0.1.0",
-  "description": "Log manager with 3 levels of logging and posibility to combine different log managers or loggers",
+  "description": "Log manager with 3 levels of logging and the possibility to combine different log managers or loggers",
   "author": "Vyacheslav Chub<vyacheslav.chub@gmail.com>",
   "license": "MIT",
   "main": "lib/index.js",
@@ -18,7 +18,6 @@
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "mocha": "5.2.0",
-    "mocha-teamcity-reporter": "^2.5.1",
     "sinon": "7.1.0",
     "ts-node": "7.0.1"
   }
