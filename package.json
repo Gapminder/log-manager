@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Log manager with 3 levels of logging and the possibility to combine different log managers or loggers",
   "author": "Vyacheslav Chub<vyacheslav.chub@gmail.com>",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
